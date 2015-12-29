@@ -1,0 +1,17 @@
+Les étapes pour lancer le serveur: 
+
+1. connection ssh
+ssh mathieu.lechine@master-bigdata.polytechnique.fr
+mode de passe
+
+2. copier les fichiers: code + base de données sur le serveur
+copier le fichier avec scp
+scp main.py mathieu.lechine@master-bigdata.polytechnique.fr : ~/
+ou le dossier en entier: 
+scp -r -p C:\Project_BigData\main.py  mathieu.lechine@master-bigdata.polytechnique.fr : ~/
+
+3. Lancer le script .py avec pyspark: 
+Commande pour lancer le script: 
+spark-submit --master yarn main_essai.py
+
+4. on peut aussi avoir spark en ligne de commande en tapant simplement "pyspark"
