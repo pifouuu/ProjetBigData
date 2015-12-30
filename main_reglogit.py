@@ -76,14 +76,14 @@ dfTrain.show()
 #choose estimator and grid
 #estima = NaiveBayes()
 #grid = ParamGridBuilder().addGrid(5, [0, 2]).build()
-lr = LogisticRegression()
-grid = ParamGridBuilder().addGrid(lr.maxIter, [0, 1]).build()
+lr = LogisticRegression()	#choose the model
+grid = ParamGridBuilder().addGrid(lr.maxIter, [0, 1]).build()	#test on two values of maxIter: 0 or 1
 print "Cross validation debut"
 
-evaluator = BinaryClassificationEvaluator()
-cv = CrossValidator(estimator=lr, estimatorParamMaps=grid, evaluator=evaluator)
-cvModel = cv.fit(dfTrain)
-resultat=evaluator.evaluate(cvModel.transform(dfTest))
+evaluator = BinaryClassificationEvaluator()	#choose the evaluator
+cv = CrossValidator(estimator=lr, estimatorParamMaps=grid, evaluator=evaluator) #perform the cross validation and keeps the best value of maxIter
+cvModel = cv.fit(dfTrain)	#train the model on the whole training set
+resultat=evaluator.evaluate(cvModel.transform(dfTest))	#compute the percentage of success on test set
 print "Pourcentage de bonne classification(0-1): ",resultat
 
 ##Train NaiveBayes
