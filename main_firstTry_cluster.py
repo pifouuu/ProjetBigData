@@ -361,7 +361,7 @@ evaluator.evaluate(df_test_pred)
 
 
 #**********************************************************************
-#-----------Training the model for prediction--------------------------
+#-----------Cross Validation--------------------------
 #**********************************************************************
 
 # La cross validation et le test des différents paramètres du classifieurs c'est pas trop dur sur spark ML, 
