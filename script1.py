@@ -72,4 +72,4 @@ df_test_pred = cv_model.transform(dfTest)
 
 print "Labels are predicted"
 
-evaluator.evaluate(df_test_pred)
+print evaluator.evaluate(df_test_pred)
