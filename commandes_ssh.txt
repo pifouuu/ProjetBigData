@@ -12,6 +12,6 @@ scp -r -p C:\Project_BigData\main.py  mathieu.lechine@master-bigdata.polytechniq
 
 3. Lancer le script .py avec pyspark: 
 Commande pour lancer le script: 
-spark-submit --master yarn main_essai.py
+spark-submit --master yarn --driver-memory 4G main_essai.py
 
 4. on peut aussi avoir spark en ligne de commande en tapant simplement "pyspark"
