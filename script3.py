@@ -1,6 +1,24 @@
 
 # coding: utf-8
 
+#import packages
+from pyspark import SparkContext
+import loadFiles as lf
+import numpy as np
+import nltk
+import loadFilesPartial as lfp
+from pyspark.ml import Pipeline
+from pyspark.ml.feature import HashingTF
+from pyspark.ml.feature import IDF
+from pyspark.ml.feature import StringIndexer
+from pyspark.ml.classification import DecisionTreeClassifier
+from pyspark.ml.evaluation import MulticlassClassificationEvaluator
+from pyspark.ml.tuning import ParamGridBuilder
+from pyspark.ml.tuning import CrossValidator
+from pyspark.sql import SQLContext 
+from pyspark.ml.feature import Tokenizer
+
+
 import loadFilesPartial as lfp
 from pyspark import SparkContext
 from functools import partial
