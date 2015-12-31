@@ -26,6 +26,9 @@ sc = SparkContext(appName="Simple App")
 
 data,Y=lfp.loadLabeled("./data/train",1000)
 labeledData = zip(data,[y.item() for y in Y])
+
+# CHANGE NUMBER OF PARTITIONS ?
+# labeledRdd = sc.parallelize(labeledData, 16)
 labeledRdd = sc.parallelize(labeledData)
 
 def cleanLower(doc):
