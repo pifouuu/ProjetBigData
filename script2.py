@@ -2,12 +2,10 @@
 
 #import packages
 from pyspark import SparkContext
-import 
 import loadFiles as lf
 import numpy as np
 import nltk
 import loadFilesPartial as lfp
-import transformers as tr
 from pyspark.ml import Pipeline
 from pyspark.ml.feature import HashingTF
 from pyspark.ml.feature import IDF
