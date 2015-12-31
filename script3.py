@@ -3,6 +3,7 @@
 
 import loadFilesPartial as lfp
 from pyspark import SparkContext
+from functools import partial
 
 #create Sparkcontext
 sc = SparkContext(appName="Simple App")
