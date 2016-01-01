@@ -1,5 +1,5 @@
-# Les valeurs à modifier sont :
-# sauvegarde_MYMODEL --> remplacer par le fichier où le modèle a été stocké
+# Les valeurs a modifier sont :
+# sauvegarde_MYMODEL --> remplacer par le fichier ou le modele a ete stocke
 # MY_SCRIPT --> remplacer par le nom de votre script d'entrainement
 
 from pyspark import SparkContext

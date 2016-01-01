@@ -3,7 +3,7 @@
 # Cela va creer un fichier texte 'sauvegarde_MYMODEL' (a renommer en fonction du modele)
 # qui contiendra le modele deja entraine
 
-# remplacer MYMODELINSTANCE par le modèle fitté sur les données
+# remplacer MYMODELINSTANCE par le modele fitte sur les données
 
 import pickle
 
