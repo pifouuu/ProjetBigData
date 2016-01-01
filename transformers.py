@@ -68,10 +68,11 @@ class NLTKPosTagger(Transformer, HasInputCol, HasOutputCol):
         tagset = self.getTagset()
 
         def f(s):
-            return nltk.pos_tag(s,tagset=tagset)
+            tagged = nltk.pos_tag(s,tagset=tagset)
+            return zip(*tagged)[1]
 
-        fields = (StructField('word',StringType(),True),StructField('tag',StringType(),True))
-        t = ArrayType(StructType(fields))
+        t = ArrayType(StringType())
         out_col = self.getOutputCol()
         in_col = dataset[self.getInputCol()]
         return dataset.withColumn(out_col, udf(f, t)(in_col))
+
