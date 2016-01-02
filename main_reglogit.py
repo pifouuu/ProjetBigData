@@ -78,11 +78,11 @@ dfTrain.show()
 #grid = ParamGridBuilder().addGrid(5, [0, 2]).build()
 lr = LogisticRegression()	#choose the model
 grid = ParamGridBuilder().addGrid(lr.maxIter, [0, 1]).build()	
-#la grille est construite pour trouver le meilleur paramètre 'alpha' pour le terme de régularisation du modèle: c'est un 'elastic Net'
-#max.iter vaut 30 par défaut, on pourrait changer sa valeur
+#la grille est construite pour trouver le meilleur parametre 'alpha' pour le terme de regularisation du modele: c'est un 'elastic Net'
+#max.iter vaut 30 par defaut, on pourrait changer sa valeur
 #on va donc essayer 30 valeur entre 0 et 1
-#alpha=0 c'est une régularisation L2, 
-#alpha=1, c'est une régularisation L1
+#alpha=0 c'est une regularisation L2, 
+#alpha=1, c'est une regularisation L1
 print "Cross validation debut"
 
 evaluator = BinaryClassificationEvaluator()	#choose the evaluator
@@ -107,9 +107,4 @@ print "Pourcentage de bonne classification(0-1): ",resultat
 #for x in predictions:
 #	output.write('%s\t%d\n'%x)
 #output.close()
-
-
-
-
-
 
