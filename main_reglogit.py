@@ -117,6 +117,6 @@ print "Pourcentage de bonne classification(0-1): ",resultat
 
 import pickle
 
-output=file('./sauvegarde_MYMODEL','w')
-pickle.dump(MYMODELINSTANCE,output)
+output=file('./sauvegarde_reglogit','w')
+pickle.dump(cvModel,output)
 output.close()
