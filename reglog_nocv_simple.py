@@ -75,7 +75,7 @@ from pyspark.sql.types import StructType, StructField,DoubleType
 schema = StructType([StructField('label',DoubleType(),True),StructField('Vectors',VectorUDT(),True)])
 
 
-features=dfWords.map(partial(vectorize,dico=dict_broad.value)).toDF(schema)
+features=dfTrainTok.map(partial(vectorize,dico=dict_broad.value)).toDF(schema)
 
 print "Features created"
 
