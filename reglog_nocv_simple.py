@@ -61,6 +61,8 @@ dictionaryWords={}
 for i,word in enumerate(dictWords):
 	dictionaryWords[word]=i
 
+dict_broad=sc.broadcast(dictionaryWords)
+
 from pyspark.mllib.linalg import SparseVector
 def vectorize(row,dico):
     vector_dict={}
