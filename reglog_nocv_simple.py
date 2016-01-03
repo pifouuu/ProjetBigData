@@ -5,6 +5,7 @@ from pyspark import SparkContext
 import loadFiles as lf
 import numpy as np
 import nltk
+from functools import partial
 import loadFilesPartial as lfp
 import transformers as tr
 from pyspark.ml import Pipeline
