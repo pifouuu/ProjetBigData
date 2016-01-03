@@ -104,7 +104,20 @@ for i,word in enumerate(dictUnigrams):
 
 # In[10]:
 
-authorizedTrigrams = set(['NOUN VERB ADJ'])
+# NOUN VERB ADJ   "movie is good"
+# PRON VERB ADJ   "I am satisfied"
+# DET ADJ NOUN    "a good movie"
+# VERB DET NOUN   "loved this film"
+# PRON VERB DET   "I loved the"
+# VERB ADV ADJ    "is really good"
+# ADV ADJ NOUN    "very good movie"
+# PRON ADV VERB   "I actually liked"
+# PRON VERB PRON  "I liked it"
+# VERB ADJ NOUN   "is good entertainment"
+# ADP ADJ NOUN    "with talented actors"
+
+
+authorizedTrigrams = set(['NOUN VERB ADJ', 'PRON VERB ADJ', 'ADP ADJ NOUN', 'VERB ADJ NOUN', 'PRON VERB PRON', 'PRON ADV VERB', 'ADV ADJ NOUN', 'VERB ADV ADJ', 'PRON VERB DET', 'DET ADJ NOUN', 'VERB DET NOUN'])
 auth_broad = sc.broadcast(authorizedTrigrams)
 
 
