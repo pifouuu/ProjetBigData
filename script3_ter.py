@@ -24,7 +24,7 @@ t0 = time()
 
 data,Y=lfp.loadLabeled("./data/train",100)
 labeledData = zip(data,[y.item() for y in Y])
-df = sc.parallelize(labeledData,numSlices=16).toDF(['review','label'])
+df = sc.parallelize(labeledData,numSlices=16).toDF(['review','label']).cache()
 
 tt = time() - t0
 print "Done in {} second".format(round(tt,3))
@@ -48,8 +48,10 @@ def preProcess(doc):
 
 bigram = NGram(inputCol="words", outputCol="bigrams")
 
-dfPre=df.map(preProcess).toDF(['words','label'])
+dfPre=df.map(preProcess).toDF(['words','label']).cache()
 dfTrain, dfValid = bigram.transform(dfPre).randomSplit([0.8,0.2])
+dfTrain.cache()
+dfValid.cache()
 
 lists=dfTrain.map(lambda r : r.bigrams).collect()
 dictBigrams=list(set(itertools.chain(*lists)))
@@ -79,7 +81,7 @@ def vectorizeBi(row,dico):
             vector_dict[dico[w]]=1
     return (SparseVector(len(dico),vector_dict),row.label)
 
-allFeatures=dfTrain.map(partial(vectorizeBi,dico=dict_broad.value)).toDF(['bigramVectors','label'])
+allFeatures=dfTrain.map(partial(vectorizeBi,dico=dict_broad.value)).toDF(['bigramVectors','label']).cache()
 
 tt = time() - t0
 print "Done in {} second".format(round(tt,3))
@@ -93,23 +95,23 @@ from pyspark.mllib.stat import Statistics
 print "Starting chi square test"
 t0 = time()
 
-labeledPoints = allFeatures.map(lambda row : LabeledPoint(row.label, row.bigramVectors))
+labeledPoints = allFeatures.map(lambda row : LabeledPoint(row.label, row.bigramVectors)).cache()
 chi = Statistics.chiSqTest(labeledPoints)
 
 tt = time() - t0
 print "Done in {} second".format(round(tt,3))
 
 
-# In[20]:
-
-import pandas as pd
-pd.set_option('display.max_colwidth', 30)
-
-records = [(result.statistic, result.pValue) for result in chi]
-index=[revDict_broad.value[i] for i in range(len(revDict_broad.value))]
-chi_df = pd.DataFrame(data=records, index=index, columns=["Statistic","p-value"])
-
-chi_df.sort_values("p-value")
+## In[20]:
+#
+#import pandas as pd
+#pd.set_option('display.max_colwidth', 30)
+#
+#records = [(result.statistic, result.pValue) for result in chi]
+#index=[revDict_broad.value[i] for i in range(len(revDict_broad.value))]
+#chi_df = pd.DataFrame(data=records, index=index, columns=["Statistic","p-value"])
+#
+#chi_df.sort_values("p-value")
 
 
 # In[17]:
@@ -123,7 +125,7 @@ for i,bigram in enumerate(biSelect):
     dictSelect[bigram]=i
 dictSel_broad = sc.broadcast(dictSelect)
 
-dfTrainSelect=dfTrain.map(partial(vectorizeBi,dico=dictSel_broad.value)).toDF(['selectedFeatures','label'])
+dfTrainSelect=dfTrain.map(partial(vectorizeBi,dico=dictSel_broad.value)).toDF(['selectedFeatures','label']).cache()
 
 tt = time() - t0
 print "Done in {} second".format(round(tt,3))
@@ -144,7 +146,7 @@ lr = LogisticRegression(featuresCol='selectedFeatures',labelCol='target_indexed'
 evaluator = MulticlassClassificationEvaluator(predictionCol='prediction', labelCol='target_indexed', metricName='precision')
 
 string_indexer_model = string_indexer.fit(dfTrainSelect)
-dfTrainIndexed = string_indexer_model.transform(dfTrainSelect)
+dfTrainIndexed = string_indexer_model.transform(dfTrainSelect).cache()
 lrModel = lr.fit(dfTrainIndexed)
 
 tt = time() - t0
@@ -156,9 +158,9 @@ print "Done in {} second".format(round(tt,3))
 print "Testing precision of the model"
 t0 = time()
 
-dfValidSelect=dfValid.map(partial(vectorizeBi,dico=dictSel_broad.value)).toDF(['selectedFeatures','label'])
-dfValidIndexed = string_indexer_model.transform(dfValidSelect)
-df_valid_pred = lrModel.transform(dfValidIndexed)
+dfValidSelect=dfValid.map(partial(vectorizeBi,dico=dictSel_broad.value)).toDF(['selectedFeatures','label']).cache()
+dfValidIndexed = string_indexer_model.transform(dfValidSelect).cache()
+df_valid_pred = lrModel.transform(dfValidIndexed).cache()
 res=evaluator.evaluate(df_valid_pred)
 print res
 
@@ -174,12 +176,12 @@ t0 = time()
 
 test,names=lf.loadUknown('./data/test')
 text_name=zip(test,names)
-dfTest = sc.parallelize(text_name).toDF(['review','label'])
+dfTest = sc.parallelize(text_name).toDF(['review','label']).cache()
 
-dfTestPre=dfTest.map(preProcess).toDF(['words','label'])
+dfTestPre=dfTest.map(preProcess).toDF(['words','label']).cache()
 bigram = NGram(inputCol="words", outputCol="bigrams")
-dfTestBi = bigram.transform(dfTestPre)
-finalDfSelect = dfTestBi.map(partial(vectorizeBi,dico=dictSel_broad.value)).toDF(['selectedFeatures','label'])
+dfTestBi = bigram.transform(dfTestPre).cache()
+finalDfSelect = dfTestBi.map(partial(vectorizeBi,dico=dictSel_broad.value)).toDF(['selectedFeatures','label']).cache()
 
 tt = time() - t0
 print "Done in {} second".format(round(tt,3))
