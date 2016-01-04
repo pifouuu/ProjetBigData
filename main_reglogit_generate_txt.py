@@ -1,3 +1,4 @@
+#import packages
 from pyspark import SparkContext
 import loadFiles as lf
 import numpy as np
@@ -14,15 +15,15 @@ from pyspark.ml.tuning import CrossValidator
 from pyspark.mllib.linalg import Vectors
 from pyspark.ml.classification import LogisticRegression
 from pyspark.mllib.classification import LogisticRegressionWithLBFGS
-#from my_mllib_classification import LogisticRegressionWithLBFGS
 
 sc = SparkContext(appName="Simple App")
 
 # my modulus
 import loadFilesPartial as lfp
-#from my_prediction import createBinaryLabeledPoint
 
-
+#*****************************************************************
+#************************Two useful functions*********************
+#******************************************************************
 def createBinaryLabeledPoint(doc_class,dictionary):
 	words=doc_class[0].strip().split(' ')
 	#create a binary vector for the document with all the words that appear (0:does not appear,1:appears)
@@ -41,8 +42,11 @@ def Predict(name_text,dictionary,model):
 	return (name_text[0], model.predict(SparseVector(len(dictionary),vector_dict)))
 
 
-#data,Y=lf.loadLabeled("./data/train")
-N=100
+#*****************************************************************
+#********Feature Extraction & Transformation*********************
+#******************************************************************
+print "Stage: Feature Extraction and Transformation"
+#load training data
 data,Y=lf.loadLabeled("./data/train")
 print len(data)
 dataRDD=sc.parallelize(data,numSlices=16)
@@ -71,7 +75,7 @@ labeledRDD=dcRDD.map(partial(createBinaryLabeledPoint,dictionary=dict_broad.valu
 
 
 
-print "PREDICTION"
+print "Stage: PREDICTION"
 #train logistic regression
 model=LogisticRegressionWithLBFGS.train(labeledRDD)
 #broadcast the model
@@ -80,8 +84,9 @@ test,names=lf.loadUknown('./data/test')
 name_text=zip(names,test)
 predictions=sc.parallelize(name_text).map(partial(Predict,dictionary=dict_broad.value,model=mb.value)).collect()
 
-print "Ecriture du fichier classifications_reglogit.txt"
+
 output=file('./classifications_reglogit.txt','w')
 for x in predictions:
 	output.write('%s\t%d\n'%x)
 output.close()
+print "The file classifications_reglogit.txt is written"
