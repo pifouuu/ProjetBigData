@@ -1,6 +1,10 @@
 
 # coding: utf-8
 
+#this script carries out a cross validation on the model of Logistic regression
+#with advanced Feature Extraction & Transformation: Stemming & Cleaning, Stopword Removal
+# and Feature Selection with bi-grams
+
 # Necessary imports, either for the script to operate 
 # on the cluster or for further improvements
 
@@ -154,42 +158,6 @@ print res
 tt = time() - t0
 print "Done in {} second".format(round(tt,3))
 
-
-# # In[12]:
-
-# import loadFiles as lf
-# print "Start loading  and preprocessing test data "
-# t0 = time()
-
-# test,names=lf.loadUknown('./data/test')
-# text_name=zip(test,names)
-# dfTest = sc.parallelize(text_name).toDF(['review','label']).cache()
-
-# dfTestPre=dfTest.map(preProcess).toDF(['words','label']).cache()
-# bigram = NGram(inputCol="words", outputCol="bigrams")
-# dfTestBi = bigram.transform(dfTestPre).cache()
-# finalDfSelect = dfTestBi.map(partial(vectorizeBi,dico=dict_broad.value)).toDF(['bigramVectors','label']).cache()
-
-# tt = time() - t0
-# print "Done in {} second".format(round(tt,3))
-
-
-# # In[14]:
-
-# print "Classifying test data"
-# t0 = time()
-# list_predictions = lrModel.transform(finalDfSelect).collect()
-# tt = time() - t0
-# print "Done in {} second".format(round(tt,3))
-
-
-# # In[16]:
-
-# output=file('./classifications_script5.txt','w')
-# for x in list_predictions:
-# 	output.write('{}\t{}\n'.format(x.label, x.prediction))
-# output.close()
-# print "File classifications_script5.txt is written"
 
 
 
