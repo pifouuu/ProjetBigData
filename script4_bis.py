@@ -192,11 +192,11 @@ print "Done in {} second".format(round(tt,3))
 
 # In[ ]:
 
-output=file('./classifications_script3.txt','w')
+output=file('./classifications_script4.txt','w')
 for x in list_predictions:
 	output.write('{}\t{}\n'.format(x.label, x.prediction))
 output.close()
-print "File classifications_script3.txt is written"
+print "File classifications_script4.txt is written"
 
 
 # In[25]:
