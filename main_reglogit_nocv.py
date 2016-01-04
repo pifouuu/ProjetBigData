@@ -76,7 +76,7 @@ dfTrain.show()
 #choose estimator and grid
 #estima = NaiveBayes()
 #grid = ParamGridBuilder().addGrid(5, [0, 2]).build()
-lr = LogisticRegression(maxIter=20)	#choose the model
+lr = LogisticRegression(featuresCol="features", labelCol="label", predictionCol="prediction",maxIter=20)	#choose the model
 grid = ParamGridBuilder().addGrid(lr.maxIter, [0, 1]).build()	
 #la grille est construite pour trouver le meilleur parametre 'alpha' pour le terme de regularisation du modele: c'est un 'elastic Net'
 #max.iter vaut 30 par defaut, on pourrait changer sa valeur
@@ -85,10 +85,11 @@ grid = ParamGridBuilder().addGrid(lr.maxIter, [0, 1]).build()
 #alpha=1, c'est une regularisation L1
 print "Cross validation debut"
 
-evaluator = BinaryClassificationEvaluator()	#choose the evaluator
+evaluator = BinaryClassificationEvaluator(rawPredictionCol="prediction", labelCol="label")	#choose the evaluator
 cv = CrossValidator(estimator=lr, evaluator=evaluator) #perform the cross validation and keeps the best value of maxIter
-cvModel = cv.fit(dfTrain)	#train the model on the whole training set
-resultat=evaluator.evaluate(cvModel.transform(dfTest))	#compute the percentage of success on test set
+#cvModel = cv.fit(dfTrain)	#train the model on the whole training set
+model = lr.fit(dfTrain)
+resultat=evaluator.evaluate(model.transform(dfTest))	#compute the percentage of success on test set
 print "Pourcentage de bonne classification(0-1): ",resultat
 
 ##Train NaiveBayes
