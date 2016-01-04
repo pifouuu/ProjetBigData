@@ -39,8 +39,8 @@ def Predict(name_text,dictionary,model):
 	return (name_text[0], model.predict(SparseVector(len(dictionary),vector_dict)))
 
 
-#data,Y=lf.loadLabeled("./data/train")
-data,Y=lfp.loadLabeled("./data/train",1000)
+data,Y=lf.loadLabeled("./data/train")
+#data,Y=lfp.loadLabeled("./data/train",1000)
 print len(data)
 dataRDD=sc.parallelize(data,numSlices=16)
 
