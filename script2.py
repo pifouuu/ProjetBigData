@@ -22,7 +22,7 @@ from pyspark.ml.feature import Tokenizer
 #create Sparkcontext
 sc = SparkContext(appName="Simple App")
 
-data,Y=lfp.loadLabeled("./data/train",1000)
+data,Y=lf.loadLabeled("./data/train")
 labeledData = zip(data,[y.item() for y in Y])
 
 # CHANGE NUMBER OF PARTITIONS ?
