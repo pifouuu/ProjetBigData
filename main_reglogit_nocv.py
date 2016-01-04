@@ -8,6 +8,7 @@ from pyspark.mllib.linalg import SparseVector
 from pyspark.mllib.regression import LabeledPoint
 #cross validation
 from pyspark.ml.evaluation import BinaryClassificationEvaluator
+from pyspark.ml.evaluation import MulticlassClassificationEvaluator
 from pyspark.sql import SQLContext 
 from pyspark.ml.tuning import ParamGridBuilder
 from pyspark.ml.tuning import CrossValidator
@@ -85,7 +86,7 @@ grid = ParamGridBuilder().addGrid(lr.maxIter, [0, 1]).build()
 #alpha=1, c'est une regularisation L1
 print "Cross validation debut"
 
-evaluator = BinaryClassificationEvaluator(rawPredictionCol="prediction", labelCol="label")	#choose the evaluator
+evaluator = MulticlassClassificationEvaluator(predictionCol="prediction", labelCol="label",metricName='precision')	#choose the evaluator
 cv = CrossValidator(estimator=lr, evaluator=evaluator) #perform the cross validation and keeps the best value of maxIter
 #cvModel = cv.fit(dfTrain)	#train the model on the whole training set
 model = lr.fit(dfTrain)
