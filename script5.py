@@ -22,7 +22,7 @@ from time import time
 print "Start loading all data to a dataframe"
 t0 = time()
 
-data,Y=lfp.loadLabeled("./data/train",100)
+data,Y=lfp.loadLabeled("./data/train",1000)
 labeledData = zip(data,[y.item() for y in Y])
 df = sc.parallelize(labeledData,numSlices=16).toDF(['review','label']).cache()
 
@@ -115,7 +115,7 @@ print "Done in {} second".format(round(tt,3))
 print "Testing precision of the model"
 t0 = time()
 
-dfValidSelect=dfValid.map(partial(vectorizeBi,dico=dict_broad.value)).toDF(['bigramFeatures','label']).cache()
+dfValidSelect=dfValid.map(partial(vectorizeBi,dico=dict_broad.value)).toDF(['bigramVectors','label']).cache()
 dfValidIndexed = string_indexer_model.transform(dfValidSelect).cache()
 df_valid_pred = lrModel.transform(dfValidIndexed).cache()
 res=evaluator.evaluate(df_valid_pred)
