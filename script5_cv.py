@@ -97,7 +97,7 @@ def vectorizeBi(row,dico):
             vector_dict[dico[w]]=1
     return (SparseVector(len(dico),vector_dict),row.label)
 
-dfBigram=dfTrain.map(partial(vectorizeBi,dico=dict_broad.value)).toDF(['bigramVectors','label']).cache()
+dfBigram=dfTrain.map(partial(vectorizeBi,dico=dict_broad.value)).toDF(['features','label']).cache()
 
 tt = time() - t0
 print "Done in {} second".format(round(tt,3))
@@ -132,7 +132,7 @@ print "Cross validation debut"
 
 evaluator = BinaryClassificationEvaluator() #choose the evaluator
 cv = CrossValidator(estimator=lr, estimatorParamMaps=grid, evaluator=evaluator) #perform the cross validation and keeps the best value of maxIter
-cvModel = cv.fit(dfTrain)   #train the model on the whole training set
+cvModel = cv.fit(dfBigram)   #train the model on the whole training set
 resultat=evaluator.evaluate(cvModel.transform(dfTest))  #compute the percentage of success on test set
 print "Pourcentage de bonne classification(0-1): ",resultat
 
@@ -145,10 +145,10 @@ print "Done in {} second".format(round(tt,3))
 print "Testing precision of the model"
 t0 = time()
 
-dfValidSelect=dfValid.map(partial(vectorizeBi,dico=dict_broad.value)).toDF(['bigramVectors','label']).cache()
-dfValidIndexed = string_indexer_model.transform(dfValidSelect).cache()
-df_valid_pred = lrModel.transform(dfValidIndexed).cache()
-res=evaluator.evaluate(df_valid_pred)
+dfValidSelect=dfValid.map(partial(vectorizeBi,dico=dict_broad.value)).toDF(['features','label']).cache()
+#dfValidIndexed = string_indexer_model.transform(dfValidSelect).cache()
+df_valid_pred = cvModel.transform(dfValidSelect).cache()
+res=evaluator.evaluate(dfValidSelect)
 print res
 
 tt = time() - t0
