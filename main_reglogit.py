@@ -43,7 +43,7 @@ def Predict(name_text,dictionary,model):
 
 
 #*****************************************************************
-#********Preparing data and feature selection*********************
+#********Feature Extraction & Transformation*********************
 #******************************************************************
 #load data
 data,Y=lf.loadLabeled("./data/train")
@@ -74,8 +74,9 @@ dcRDD=sc.parallelize(data_class,numSlices=16)
 labeledRDD=dcRDD.map(partial(createBinaryLabeledPoint,dictionary=dict_broad.value))
 
 
-#*****************************************************************
-#********CROSS VALIDATION. Model: logistic regression*************
+#****************************************************************
+#*********************CROSS VALIDATION: 80%/20%******************
+#*******************Model: logistic regression*******************
 #*****************************************************************
 
 #create a data frame from an RDD -> features must be Vectors.sparse from pyspark.mllib.linalg
@@ -86,15 +87,13 @@ dfTrain.show()
 #choose estimator and grid
 lr = LogisticRegression()	#choose the model
 grid = ParamGridBuilder().addGrid(lr.maxIter, [0, 1]).build()	
-#la grille est construite pour trouver le meilleur parametre 'alpha' pour le terme de regularisation du modele: c'est un 'elastic Net'
-#max.iter vaut 30 par defaut, on pourrait changer sa valeur
-#on va donc essayer 30 valeur entre 0 et 1
-#alpha=0 c'est une regularisation L2, 
-#alpha=1, c'est une regularisation L1
-print "Cross validation debut"
+#the grid is built to find the best paramter 'alpha' for the regularization of the model. It is an elastic net
+#alpha=0, for a L2 regularization, 
+#alpha=1, for a L1 regularization
+print "Start Cross validation"
 
 evaluator = BinaryClassificationEvaluator()	#choose the evaluator
 cv = CrossValidator(estimator=lr, estimatorParamMaps=grid, evaluator=evaluator) #perform the cross validation and keeps the best value of maxIter
 cvModel = cv.fit(dfTrain)	#train the model on the whole training set
 resultat=evaluator.evaluate(cvModel.transform(dfTest))	#compute the percentage of success on test set
-print "Pourcentage de bonne classification(0-1): ",resultat
+print "Percentage of correct predicted labels (0-1): ",resultat
