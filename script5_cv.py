@@ -7,6 +7,22 @@
 from pyspark import SparkContext
 import loadFiles as lf
 import numpy as np
+from random import randint
+from  pyspark.mllib.classification import NaiveBayes
+from functools import partial
+from pyspark.mllib.linalg import SparseVector
+from pyspark.mllib.regression import LabeledPoint
+#cross validation
+from pyspark.ml.evaluation import BinaryClassificationEvaluator
+from pyspark.sql import SQLContext 
+from pyspark.ml.tuning import ParamGridBuilder
+from pyspark.ml.tuning import CrossValidator
+from pyspark.ml.classification import LogisticRegression
+from pyspark.mllib.linalg import Vectors
+
+from pyspark import SparkContext
+import loadFiles as lf
+import numpy as np
 import nltk
 from pyspark.sql import SQLContext 
 
