@@ -1,3 +1,7 @@
+#this script generates the file classifications.txt (predicted labels on the test set)
+#It is based on the model of logistic regression
+#with basic Feature Extraction & Transformation : unigrams
+
 #import packages
 from pyspark import SparkContext
 import loadFiles as lf
