@@ -1,3 +1,4 @@
+#import packages
 from pyspark import SparkContext
 import loadFiles as lf
 import numpy as np
@@ -18,9 +19,11 @@ sc = SparkContext(appName="Simple App")
 
 # my modulus
 import loadFilesPartial as lfp
-#from my_prediction import createBinaryLabeledPoint
 
 
+#*****************************************************************
+#************************Two useful functions*********************
+#******************************************************************
 def createBinaryLabeledPoint(doc_class,dictionary):
 	words=doc_class[0].strip().split(' ')
 	#create a binary vector for the document with all the words that appear (0:does not appear,1:appears)
@@ -39,6 +42,10 @@ def Predict(name_text,dictionary,model):
 	return (name_text[0], model.predict(SparseVector(len(dictionary),vector_dict)))
 
 
+#*****************************************************************
+#********Preparing data and feature selection*********************
+#******************************************************************
+#load data
 data,Y=lf.loadLabeled("./data/train")
 #data,Y=lfp.loadLabeled("./data/train",1000)
 print len(data)
@@ -67,15 +74,16 @@ dcRDD=sc.parallelize(data_class,numSlices=16)
 labeledRDD=dcRDD.map(partial(createBinaryLabeledPoint,dictionary=dict_broad.value))
 
 
-#cross validation
+#*****************************************************************
+#********CROSS VALIDATION. Model: logistic regression*************
+#*****************************************************************
+
 #create a data frame from an RDD -> features must be Vectors.sparse from pyspark.mllib.linalg
 sqlContext = SQLContext(sc)
 df = sqlContext.createDataFrame(labeledRDD, ['features','label'])
 dfTrain, dfTest = df.randomSplit([0.8,0.2])
 dfTrain.show()
 #choose estimator and grid
-#estima = NaiveBayes()
-#grid = ParamGridBuilder().addGrid(5, [0, 2]).build()
 lr = LogisticRegression()	#choose the model
 grid = ParamGridBuilder().addGrid(lr.maxIter, [0, 1]).build()	
 #la grille est construite pour trouver le meilleur parametre 'alpha' pour le terme de regularisation du modele: c'est un 'elastic Net'
@@ -90,27 +98,3 @@ cv = CrossValidator(estimator=lr, estimatorParamMaps=grid, evaluator=evaluator) 
 cvModel = cv.fit(dfTrain)	#train the model on the whole training set
 resultat=evaluator.evaluate(cvModel.transform(dfTest))	#compute the percentage of success on test set
 print "Pourcentage de bonne classification(0-1): ",resultat
-
-##Train NaiveBayes
-#model=NaiveBayes.train(labeledRDD)
-##broadcast the model
-#mb=sc.broadcast(model)
-#
-#test,names=lf.loadUknown('./data/test')
-#name_text=zip(names,test)
-##for each doc :(name,text):
-##apply the model on the vector representation of the text
-##return the name and the class
-#predictions=sc.parallelize(name_text).map(partial(Predict,dictionary=dict_broad.value,model=mb.value)).collect()
-#
-#output=file('./classifications.txt','w')
-#for x in predictions:
-#	output.write('%s\t%d\n'%x)
-#output.close()
-
-# Ceci est un bout de code qu'il faut coller a la fin du script
-# qui entraine le modele.
-# Cela va creer un fichier texte 'sauvegarde_MYMODEL' (a renommer en fonction du modele)
-# qui contiendra le modele deja entraine
-
-# remplacer MYMODELINSTANCE par le modele fitte sur les donnees
