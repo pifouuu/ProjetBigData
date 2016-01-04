@@ -114,9 +114,3 @@ print "Pourcentage de bonne classification(0-1): ",resultat
 # qui contiendra le modele deja entraine
 
 # remplacer MYMODELINSTANCE par le modele fitte sur les donnees
-
-import pickle
-
-output=file('./sauvegarde_reglogit','w')
-pickle.dump(cvModel,output)
-output.close()
