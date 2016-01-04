@@ -1,6 +1,10 @@
 
 # coding: utf-8
 
+#this script generates the file classifications.txt based on the model of Logistic regression
+#with advanced Feature Extraction & Transformation: Stemming & Cleaning, Stopword Removal
+# and Feature Selection with tri-grams and POS tagging
+
 # Necessary imports, either for the script to operate 
 # on the cluster or for further improvements
 

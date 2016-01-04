@@ -1,5 +1,9 @@
 # coding: utf-8
 
+#this script generates the file classifications.txt based on the model of Decision Tree Classifier
+#with advanced Feature Extraction & Transformation: Stemming & Cleaning, Stopword Removal
+# and Feature Selection using TF-IDF
+
 #import packages
 from pyspark import SparkContext
 import loadFiles as lf
@@ -31,15 +35,7 @@ rdd = labeledRdd.map(lambda doc : (cleanLower(doc[0]),doc[1]))
 print "Text is cleaned"
 
 sqlContext = SQLContext(sc)
-
-
-#**************************************************************
-#*******Partie générique à mdifier dans les script*************
 dfTrain = sqlContext.createDataFrame(rdd, ['review', 'label'])
-#dfTrain, dfTest = df.randomSplit([0.8,0.2])
-#print "Random split is done"
-#**************************************************************
-#**************************************************************
 
 tokenizerNoSw = tr.NLTKWordPunctTokenizer(
     inputCol="review", outputCol="wordsNoSw",  
@@ -55,11 +51,6 @@ pipeline = Pipeline(stages=[tokenizerNoSw,
                             string_indexer,
                             dt])
 
-
-#**************************************************************
-#**************Partie de code générique************************
-#*************à copier après le pipeline***********************
-#**************************************************************
 
 model = pipeline.fit(dfTrain)
 

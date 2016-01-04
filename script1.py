@@ -1,5 +1,9 @@
 # coding: utf-8
 
+#this script carries out a cross validation on the model of Decision Tree Classifier
+#with advanced Feature Extraction & Transformation: Stemming & Cleaning, Stopword Removal
+# and Feature Selection using TF-IDF
+
 #import packages
 from pyspark import SparkContext
 import loadFiles as lf
@@ -20,6 +24,11 @@ from pyspark.sql import SQLContext
 
 #create Sparkcontext
 sc = SparkContext(appName="Simple App")
+
+
+#*****************************************************************
+#********Feature Extraction & Transformation*********************
+#******************************************************************
 
 data,Y=lf.loadLabeled("./data/train")
 labeledData = zip(data,[y.item() for y in Y])
@@ -50,6 +59,12 @@ pipeline = Pipeline(stages=[tokenizerNoSw,
                             idf,
                             string_indexer,
                             dt])
+
+
+#****************************************************************
+#*********************CROSS VALIDATION: 80%/20%******************
+#*******************Model: DecisionTreeClassifier*****************
+#*****************************************************************
 
 evaluator = MulticlassClassificationEvaluator(predictionCol='prediction', labelCol='target_indexed', metricName='precision')
 

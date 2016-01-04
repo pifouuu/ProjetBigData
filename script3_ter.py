@@ -1,6 +1,11 @@
 
 # coding: utf-8
 
+#this script generates the file classifications.txt based on the model of Logistic regression
+#with advanced Feature Extraction & Transformation: Stemming & Cleaning,
+# and Feature Selection with the Khi-deux test on bigrams
+
+
 # Necessary imports, either for the script to operate 
 # on the cluster or for further improvements
 

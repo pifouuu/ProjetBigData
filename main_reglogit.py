@@ -1,3 +1,6 @@
+#this script carries out a cross validation on the model of logistic regression
+#with basic Feature Extraction & Transformation : unigrams
+
 #import packages
 from pyspark import SparkContext
 import loadFiles as lf

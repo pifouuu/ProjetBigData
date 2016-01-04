@@ -1,5 +1,9 @@
 # coding: utf-8
 
+#this script carries out a cross validation on the model of Decision Tree Classifier
+#with advanced Feature Extraction & Transformation: Stemming & Cleaning
+# and Feature Selection using among other TF-IDF
+
 #import packages
 from pyspark import SparkContext
 import loadFiles as lf
