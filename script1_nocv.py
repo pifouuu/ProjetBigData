@@ -16,6 +16,7 @@ from pyspark.ml.evaluation import MulticlassClassificationEvaluator
 from pyspark.ml.tuning import ParamGridBuilder
 from pyspark.ml.tuning import CrossValidator
 from pyspark.sql import SQLContext 
+from pyspark.ml.classification import LogisticRegression
 
 
 #create Sparkcontext
@@ -43,7 +44,7 @@ tokenizerNoSw = tr.NLTKWordPunctTokenizer(
 hashing_tf = HashingTF(inputCol=tokenizerNoSw.getOutputCol(), outputCol='reviews_tf')
 idf = IDF(inputCol=hashing_tf.getOutputCol(), outputCol="reviews_tfidf")
 string_indexer = StringIndexer(inputCol='label', outputCol='target_indexed')
-dt = DecisionTreeClassifier(featuresCol=idf.getOutputCol(), labelCol=string_indexer.getOutputCol(), maxDepth=10)
+dt = LogisticRegression(featuresCol=idf.getOutputCol(), labelCol=string_indexer.getOutputCol(),maxIter=30, regParam=0.01)
 
 pipeline = Pipeline(stages=[tokenizerNoSw,
                             hashing_tf,
