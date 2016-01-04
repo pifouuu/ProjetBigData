@@ -22,7 +22,7 @@ from time import time
 print "Start loading all data to a dataframe"
 t0 = time()
 
-data,Y=lfp.loadLabeled("./data/train",1000)
+data,Y=lp.loadLabeled("./data/train")
 labeledData = zip(data,[y.item() for y in Y])
 df = sc.parallelize(labeledData,numSlices=16).toDF(['review','label']).cache()
 
@@ -155,11 +155,11 @@ print "Done in {} second".format(round(tt,3))
 
 # In[16]:
 
-output=file('./classifications_script3.txt','w')
+output=file('./classifications_script5.txt','w')
 for x in list_predictions:
 	output.write('{}\t{}\n'.format(x.label, x.prediction))
 output.close()
-print "File classifications_script3.txt is written"
+print "File classifications_script5.txt is written"
 
 
 
