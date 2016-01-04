@@ -22,7 +22,7 @@ from time import time
 print "Start loading all data to a dataframe"
 t0 = time()
 
-data,Y=lp.loadLabeled("./data/train")
+data,Y=lf.loadLabeled("./data/train")
 labeledData = zip(data,[y.item() for y in Y])
 df = sc.parallelize(labeledData,numSlices=16).toDF(['review','label']).cache()
 
