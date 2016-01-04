@@ -130,7 +130,7 @@ grid = ParamGridBuilder().addGrid(lr.maxIter, [0, 1]).build()
 #alpha=1, c'est une regularisation L1
 print "Cross validation debut"
 
-evaluator = BinaryClassificationEvaluator(featuresCol='bigramVectors') #choose the evaluator
+evaluator = BinaryClassificationEvaluator() #choose the evaluator
 cv = CrossValidator(estimator=lr, estimatorParamMaps=grid, evaluator=evaluator) #perform the cross validation and keeps the best value of maxIter
 cvModel = cv.fit(dfTrain)   #train the model on the whole training set
 resultat=evaluator.evaluate(cvModel.transform(dfTest))  #compute the percentage of success on test set
