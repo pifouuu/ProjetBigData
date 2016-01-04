@@ -138,7 +138,7 @@ dfTest = sc.parallelize(text_name).toDF(['review','label']).cache()
 dfTestPre=dfTest.map(preProcess).toDF(['words','label']).cache()
 bigram = NGram(inputCol="words", outputCol="bigrams")
 dfTestBi = bigram.transform(dfTestPre).cache()
-finalDfSelect = dfTestBi.map(partial(vectorizeBi,dico=dict_broad.value)).toDF(['selectedFeatures','label']).cache()
+finalDfSelect = dfTestBi.map(partial(vectorizeBi,dico=dict_broad.value)).toDF(['bigramVectors','label']).cache()
 
 tt = time() - t0
 print "Done in {} second".format(round(tt,3))
