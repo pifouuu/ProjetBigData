@@ -148,7 +148,7 @@ t0 = time()
 dfValidSelect=dfValid.map(partial(vectorizeBi,dico=dict_broad.value)).toDF(['features','label']).cache()
 #dfValidIndexed = string_indexer_model.transform(dfValidSelect).cache()
 df_valid_pred = cvModel.transform(dfValidSelect).cache()
-res=evaluator.evaluate(dfValidSelect)
+res=evaluator.evaluate(df_valid_pred)
 print res
 
 tt = time() - t0
