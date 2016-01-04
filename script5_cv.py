@@ -133,7 +133,7 @@ print "Cross validation debut"
 evaluator = BinaryClassificationEvaluator() #choose the evaluator
 cv = CrossValidator(estimator=lr, estimatorParamMaps=grid, evaluator=evaluator) #perform the cross validation and keeps the best value of maxIter
 cvModel = cv.fit(dfBigram)   #train the model on the whole training set
-resultat=evaluator.evaluate(cvModel.transform(dfTest))  #compute the percentage of success on test set
+#resultat=evaluator.evaluate(cvModel.transform(dfTest))  #compute the percentage of success on test set
 print "Pourcentage de bonne classification(0-1): ",resultat
 
 tt = time() - t0
